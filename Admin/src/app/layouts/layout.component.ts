@@ -12,7 +12,7 @@ import { LayoutState } from '../../app/store/layouts/layout-reducers';
 export class LayoutComponent {
 
   // layout related config
-  layoutType!: string;
+  layoutType: string = 'vertical';
   showMain: any;
   initialAppState!: LayoutState;
 
@@ -20,26 +20,27 @@ export class LayoutComponent {
 
   ngOnInit() {
     this.store.select('layout').subscribe((data) => {
-      this.layoutType = data.LAYOUT;
-      document.documentElement.setAttribute('data-layout', data.LAYOUT);
-      data.LAYOUT == "vertical" || data.LAYOUT == "twocolumn" ? document.documentElement.setAttribute('data-sidebar', data.SIDEBAR_COLOR) : '';
-      data.LAYOUT == "vertical" ? document.documentElement.setAttribute('data-sidebar-size', data.SIDEBAR_SIZE) : '';
-      document.documentElement.setAttribute('data-bs-theme', data.LAYOUT_MODE);
-      document.documentElement.setAttribute('data-layout-width', data.LAYOUT_WIDTH);
-      document.documentElement.setAttribute('data-sidebar-image', data.SIDEBAR_IMAGE);
-      document.documentElement.setAttribute('data-layout-position', data.LAYOUT_POSITION);
-      document.documentElement.setAttribute('data-layout-style', data.SIDEBAR_VIEW);
-      document.documentElement.setAttribute('data-topbar', data.TOPBAR);
-      document.documentElement.setAttribute('data-preloader', data.DATA_PRELOADER)
-      document.documentElement.setAttribute('data-theme', data.LAYOUT_THEME)
+      if (data && data.LAYOUT) {
+        this.layoutType = data.LAYOUT;
+        document.documentElement.setAttribute('data-layout', data.LAYOUT);
+        data.LAYOUT == "vertical" || data.LAYOUT == "twocolumn" ? document.documentElement.setAttribute('data-sidebar', data.SIDEBAR_COLOR) : '';
+        data.LAYOUT == "vertical" ? document.documentElement.setAttribute('data-sidebar-size', data.SIDEBAR_SIZE) : '';
+        document.documentElement.setAttribute('data-bs-theme', data.LAYOUT_MODE);
+        document.documentElement.setAttribute('data-layout-width', data.LAYOUT_WIDTH);
+        document.documentElement.setAttribute('data-sidebar-image', data.SIDEBAR_IMAGE);
+        document.documentElement.setAttribute('data-layout-position', data.LAYOUT_POSITION);
+        document.documentElement.setAttribute('data-layout-style', data.SIDEBAR_VIEW);
+        document.documentElement.setAttribute('data-topbar', data.TOPBAR);
+        document.documentElement.setAttribute('data-preloader', data.DATA_PRELOADER)
+        document.documentElement.setAttribute('data-theme', data.LAYOUT_THEME)
 
-      if (document.documentElement.getAttribute('data-preloader') == 'enable') {
-        setTimeout(() => {
-          (document.getElementById("preloader") as HTMLElement).style.opacity = "0";
-          (document.getElementById("preloader") as HTMLElement).style.visibility = "hidden";
-        }, 1000);
+        if (document.documentElement.getAttribute('data-preloader') == 'enable') {
+          setTimeout(() => {
+            (document.getElementById("preloader") as HTMLElement).style.opacity = "0";
+            (document.getElementById("preloader") as HTMLElement).style.visibility = "hidden";
+          }, 1000);
+        }
       }
-
     })
   }
 
