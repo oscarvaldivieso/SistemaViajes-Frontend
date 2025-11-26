@@ -101,7 +101,14 @@ export const MENU: MenuItem[] = [
                 label: 'MENUITEMS.APPS.LIST.TOURS',
                 link: '/general/tours/list',
                 parentId: 39
-            }
+            },
+            {
+                id: 80,
+                label: 'MENUITEMS.APPS.LIST.SUCURSALES',
+                link: '/general/sucursales/list',
+                parentId: 39
+            },
+
         ]
     },
     
