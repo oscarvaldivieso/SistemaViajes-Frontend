@@ -60,23 +60,15 @@ export const MENU: MenuItem[] = [
                 link: '/restaurante/restaurantes/list',
                 parentId: 12
             }
-            
+
         ]
     },
     {
         id: 24,
-        label: 'MENUITEMS.APPS.LIST.VUELO',
+        label: 'MENUITEMS.APPS.LIST.VIAJES',
         icon: 'ri ri-plane-fill ',
-        parentId: 8,
-        subItems: [
-            {
-                id: 25,
-                label: 'MENUITEMS.APPS.LIST.VUELOS',
-                link: '/vuelo/vuelos/list',
-                parentId: 24,
-                isCollapsed: true
-            }
-        ]
+        link: '/oper/viajes/list',
+        parentId: 8
     },
     {
         id: 39,
@@ -111,7 +103,7 @@ export const MENU: MenuItem[] = [
 
         ]
     },
-    
+
     {
         id: 43,
         label: 'MENUITEMS.APPS.LIST.HOTEL',
@@ -166,6 +158,6 @@ export const MENU: MenuItem[] = [
             }
         ]
     }
-    
-    
+
+
 ]

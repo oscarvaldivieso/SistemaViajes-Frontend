@@ -16,8 +16,10 @@
     "APPS": {
       "TEXT": "Apps",
       "LIST": {
-        "HOME":"Inicio",
+        "HOME": "Inicio",
         "PAQUETES": "Paquetes",
+        "VIAJES": "Viajes",
+        "SUCURSALES": "Sucursales",
         "PAQUETE": "Paquete",
         "USUARIO": "Usuario",
         "ACCESO": "Acceso",
