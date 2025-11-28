@@ -1,8 +1,9 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule } from 'ngx-toastr';
 
+// Routing
+import { ColaboradoresRoutingModule } from './colaboradores-routing.module';
 
 // Shared
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -14,30 +15,26 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 
-// Componentes
-import { CreateComponent } from './create/create.component';
-import { EditComponent } from './edit/edit.component';
-import { DetailsComponent } from './details/details.component';
-import { ListComponent } from './list/list.component';
-
 // Otros módulos
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SimplebarAngularModule } from 'simplebar-angular';
 import { FlatpickrModule } from 'angularx-flatpickr';
-import { ViajesRoutingModule } from './viajes-routing.module';
+
+import { ListComponent } from './list/list.component';
+import { CreateComponent } from './create/create.component';
+import { DetailsComponent } from './details/details.component';
+import { EditComponent } from './edit/edit.component';
 
 @NgModule({
     imports: [
         // Standalone components
-        CreateComponent,
-        EditComponent,
-        DetailsComponent,
         ListComponent,
-
+        CreateComponent,
+        DetailsComponent,
+        EditComponent,
         // Modules
-        ViajesRoutingModule,
         CommonModule,
-        ToastrModule.forRoot(),
+        ColaboradoresRoutingModule,
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
@@ -52,4 +49,4 @@ import { ViajesRoutingModule } from './viajes-routing.module';
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ViajesModule { }
+export class ColaboradoresModule { }

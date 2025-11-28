@@ -8,20 +8,6 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <!-- Success Alert -->
-        <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
-            <i class="ri-checkbox-circle-line me-2"></i>
-            <strong>Éxito:</strong> {{ successMessage }}
-            <button type="button" class="btn-close" (click)="successMessage = ''"></button>
-        </div>
-
-        <!-- Error Alert -->
-        <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-            <i class="ri-error-warning-line me-2"></i>
-            <strong>Error:</strong> {{ errorMessage }}
-            <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
-        </div>
-
         <!-- Form Card -->
         <div class="card">
             <div class="card-header">
@@ -136,12 +122,13 @@
                                                     <td>{{ colaborador.colb_Identidad }}</td>
                                                     <td class="text-end">
                                                         <span class="badge bg-info-subtle text-info">
-                                                            {{ colaborador.coSu_DistanciaKm || 0 }} km
+                                                            {{ colaborador.cosu_DistanciaKm || 0 }} km
                                                         </span>
                                                     </td>
                                                     <td class="text-end">
                                                         <span class="badge bg-success-subtle text-success">
-                                                            L {{ (colaborador.coSu_DistanciaKm || 0) * 10 | number:
+                                                            L {{ (colaborador.cosu_DistanciaKm || 0) *
+                                                            getTarifaTransportista() | number:
                                                             '1.2-2' }}
                                                         </span>
                                                     </td>
@@ -156,7 +143,8 @@
                                             <div class="col-md-6">
                                                 <div class="d-flex justify-content-between">
                                                     <span class="fw-medium">Total Colaboradores:</span>
-                                                    <span class="badge bg-primary">{{ getSelectedColaboradores().length
+                                                    <span class="badge bg-primary">{{
+                                                        getSelectedColaboradores().length
                                                         }}</span>
                                                 </div>
                                             </div>

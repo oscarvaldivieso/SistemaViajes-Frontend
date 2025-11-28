@@ -67,6 +67,12 @@ export const MENU: MenuItem[] = [
                 link: '/general/sucursales/list',
                 parentId: 39
             },
+            {
+                id: 81,
+                label: 'MENUITEMS.APPS.LIST.COLABORADORES',
+                link: '/general/colaboradores/list',
+                parentId: 39
+            }
 
         ]
     },

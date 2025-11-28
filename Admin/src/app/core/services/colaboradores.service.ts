@@ -47,6 +47,36 @@ export class ColaboradoresService {
     }
 
     /**
+     * Elimina un colaborador por ID
+     */
+    eliminarColaborador(id: number): Observable<ApiResponse<any>> {
+        const headers = new HttpHeaders({
+            'XApiKey': environment.apiKey,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });
+
+        return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/Eliminar/${id}`, {
+            headers
+        });
+    }
+
+    /**
+     * Inserta un nuevo colaborador con sucursales asignadas
+     */
+    insertarColaborador(colaborador: any): Observable<ApiResponse<any>> {
+        const headers = new HttpHeaders({
+            'XApiKey': environment.apiKey,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });
+
+        return this.http.post<ApiResponse<any>>(`${this.apiUrl}/Insertar`, colaborador, {
+            headers
+        });
+    }
+
+    /**
      * Maneja los errores de las peticiones HTTP
      */
     private handleError(error: any) {

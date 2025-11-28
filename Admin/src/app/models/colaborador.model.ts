@@ -13,7 +13,7 @@ export class Colaborador {
     usua_Modificacion?: number | null;
     colb_FechaModificacion?: string | null;
     colb_Sexo?: string;
-    coSu_DistanciaKm?: number;
+    cosu_DistanciaKm?: number;
 
     constructor(init?: Partial<Colaborador>) {
         Object.assign(this, init);
