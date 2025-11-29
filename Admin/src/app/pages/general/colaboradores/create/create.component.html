@@ -125,15 +125,15 @@
                                 <div class="card-body">
                                     <!-- Add Sucursal Form -->
                                     <div class="row g-3 align-items-end mb-3 p-3 bg-light rounded">
-                                        <div class="col-md-6">
+                                        <div class="col-md-5">
                                             <label for="sucursal_select" class="form-label fw-semibold">
                                                 <i class="ri-building-2-line me-1"></i>Seleccionar Sucursal
                                             </label>
                                             <select class="form-select" id="sucursal_select"
                                                 [(ngModel)]="selectedSucursalId" [ngModelOptions]="{standalone: true}">
-                                                <option [value]="null">Seleccione una sucursal...</option>
+                                                <option [ngValue]="null">Seleccione una sucursal...</option>
                                                 <option *ngFor="let sucursal of getSucursalesDisponibles()"
-                                                    [value]="sucursal.sucu_Id">
+                                                    [ngValue]="sucursal.sucu_Id">
                                                     {{ sucursal.sucu_Codigo }} - {{ sucursal.sucu_Nombre }}
                                                 </option>
                                             </select>
@@ -142,21 +142,27 @@
                                             </small>
                                         </div>
 
+                                        <!-- CAMPO DE DISTANCIA -->
                                         <div class="col-md-4">
                                             <label for="distancia_input" class="form-label fw-semibold">
                                                 <i class="ri-map-pin-distance-line me-1"></i>Distancia (km)
                                             </label>
-                                            <input type="number" class="form-control" id="distancia_input"
-                                                [(ngModel)]="distanciaInput" [ngModelOptions]="{standalone: true}"
-                                                min="1" max="50" step="0.1" placeholder="0.0"
-                                                [class.is-invalid]="distanciaInput > 0 && getDistanciaValidationMessage()">
-                                            <div class="invalid-feedback" *ngIf="getDistanciaValidationMessage()">
-                                                {{ getDistanciaValidationMessage() }}
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="distancia_input"
+                                                    [(ngModel)]="distanciaInput" [ngModelOptions]="{standalone: true}"
+                                                    placeholder="0.0" min="0.1" max="50" step="0.1"
+                                                    [class.is-invalid]="distanciaInput != null && distanciaInput > 0 && (distanciaInput < 0.1 || distanciaInput > 50)">
+                                                <span class="input-group-text">km</span>
                                             </div>
-                                            <small class="text-muted">Rango: 0.1 - 50 km</small>
+                                            <small class="text-danger" *ngIf="getDistanciaValidationMessage()">
+                                                {{ getDistanciaValidationMessage() }}
+                                            </small>
+                                            <small class="text-muted" *ngIf="!getDistanciaValidationMessage()">
+                                                Entre 0.1 y 50 km
+                                            </small>
                                         </div>
 
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <button type="button" class="btn btn-success w-100"
                                                 (click)="agregarSucursal()" [disabled]="!canAddSucursal()">
                                                 <i class="ri-add-line align-baseline me-1"></i>Agregar
@@ -235,7 +241,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Form Actions -->
                     <div class="row mt-4">
                         <div class="col-12">

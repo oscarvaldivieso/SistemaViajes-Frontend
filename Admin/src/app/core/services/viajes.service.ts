@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Viaje } from 'src/app/models/viaje.model';
+import { ViajeListado } from 'src/app/models/viaje-list.model';
 
 interface ApiResponse<T> {
     type: number;
@@ -23,16 +24,16 @@ export class ViajesService {
     constructor(private http: HttpClient) { }
 
     /**
-     * Lista todos los viajes
+     * Lista todos los viajes con información completa
      */
-    listarViajes(): Observable<ApiResponse<Viaje[]>> {
+    listarViajes(): Observable<ApiResponse<ViajeListado[]>> {
         const headers = new HttpHeaders({
             'XApiKey': environment.apiKey,
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         });
 
-        return this.http.get<ApiResponse<Viaje[]>>(`${this.apiUrl}/Listar`, {
+        return this.http.get<ApiResponse<ViajeListado[]>>(`${this.apiUrl}/Listar`, {
             headers
         });
     }

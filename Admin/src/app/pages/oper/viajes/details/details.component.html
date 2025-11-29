@@ -1,1 +1,271 @@
-<p>details works!</p>
+<!-- Custom Breadcrumb Header -->
+<app-breadcrumbs [title]="'Detalles del Viaje'" [icon]="'ri-eye-line'" [breadcrumbItems]="[
+    { label: 'Operaciones' },
+    { label: 'Viajes', link: '/oper/viajes/list' },
+    { label: 'Detalles', active: true }
+  ]">
+</app-breadcrumbs>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-3 fs-lg">Cargando detalles del viaje...</p>
+</div>
+
+<!-- Error Alert -->
+<div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="ri-error-warning-line me-2"></i>
+    <strong>Error:</strong> {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="onBack()"></button>
+</div>
+
+<!-- Viaje Details -->
+<div *ngIf="!isLoading && viaje" class="row">
+    <div class="col-12">
+        <!-- Action Buttons -->
+        <div class="d-flex gap-2 justify-content-between align-items-center mb-3">
+            <button class="btn btn-soft-secondary" (click)="onBack()">
+                <i class="ri-arrow-left-line me-1"></i> Volver al Listado
+            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-soft-primary" (click)="onEdit()">
+                    <i class="ri-edit-line me-1"></i> Editar
+                </button>
+                <button class="btn btn-soft-danger">
+                    <i class="ri-delete-bin-line me-1"></i> Eliminar
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Info Card -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-primary-subtle border-0">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="card-title mb-2 text-primary">
+                            <i class="ri-map-pin-2-fill me-2"></i>{{ viaje.sucu_Nombre }}
+                        </h5>
+                        <p class="text-muted mb-0">
+                            <i class="ri-road-map-line me-1"></i>{{ viaje.sucu_Direccion }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <div class="badge bg-primary fs-sm px-3 py-2">
+                            <i class="ri-calendar-event-line me-1"></i>
+                            {{ viaje.viaj_Fecha | date: 'medium' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Transportista Info -->
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <div class="d-flex align-items-start">
+                                <div class="avatar-md flex-shrink-0">
+                                    <span class="avatar-title bg-primary-subtle text-primary rounded fs-2">
+                                        <i class="ri-truck-line"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="text-muted mb-1 fs-xs fw-medium text-uppercase">Transportista</p>
+                                    <h5 class="mb-2">{{ viaje.transportista }}</h5>
+                                    <div class="d-flex flex-column gap-1">
+                                        <small class="text-muted">
+                                            <i class="ri-phone-line me-1"></i>{{ viaje.transportistaTelefono || 'N/A' }}
+                                        </small>
+                                        <small class="text-success fw-semibold">
+                                            <i class="ri-money-dollar-circle-line me-1"></i>
+                                            Tarifa: L {{ viaje.tarifaTransportista | number: '1.2-2' }}/km
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Stats -->
+                    <div class="col-md-6">
+                        <div class="p-3 bg-success-subtle rounded-3 h-100">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="avatar-sm mx-auto mb-2">
+                                        <span class="avatar-title bg-success rounded-circle">
+                                            <i class="ri-team-line fs-lg"></i>
+                                        </span>
+                                    </div>
+                                    <h4 class="mb-0 text-success">{{ viaje.cantidadColaboradores }}</h4>
+                                    <p class="text-muted mb-0 fs-xs">Colaboradores</p>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-sm mx-auto mb-2">
+                                        <span class="avatar-title bg-warning rounded-circle">
+                                            <i class="ri-route-line fs-lg"></i>
+                                        </span>
+                                    </div>
+                                    <h4 class="mb-0 text-warning">{{ viaje.totalKm }}</h4>
+                                    <p class="text-muted mb-0 fs-xs">Km Totales</p>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-sm mx-auto mb-2">
+                                        <span class="avatar-title bg-danger rounded-circle">
+                                            <i class="ri-money-dollar-circle-line fs-lg"></i>
+                                        </span>
+                                    </div>
+                                    <h4 class="mb-0 text-danger">{{ viaje.totalPagar | number: '1.0-0' }}</h4>
+                                    <p class="text-muted mb-0 fs-xs">Total (L)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metadata -->
+                <div class="row mt-3 pt-3 border-top border-dashed">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <i class="ri-user-add-line me-1"></i>
+                            <strong>Creado por:</strong> {{ viaje.usuarioCreacion }} |
+                            {{ viaje.viaj_FechaCreacion | date: 'short' }}
+                        </small>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <small class="text-muted" *ngIf="viaje.usuarioModificacion">
+                            <i class="ri-edit-line me-1"></i>
+                            <strong>Modificado por:</strong> {{ viaje.usuarioModificacion }} |
+                            {{ viaje.viaj_FechaModificacion | date: 'short' }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colaboradores Section -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient border-0 d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="ri-team-line me-2"></i>
+                    Colaboradores del Viaje
+                    <span class="badge bg-primary ms-2">{{ viaje.colaboradores.length }}</span>
+                </h5>
+                <small class="text-muted">Total a pagar: L {{ viaje.totalPagar | number: '1.2-2' }}</small>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 15%;">Código</th>
+                                <th style="width: 25%;">Nombre Completo</th>
+                                <th style="width: 10%;" class="text-center">Sexo</th>
+                                <th style="width: 12%;">Teléfono</th>
+                                <th style="width: 10%;" class="text-end">Distancia</th>
+                                <th style="width: 10%;" class="text-end">Tarifa/Km</th>
+                                <th style="width: 13%;" class="text-end">Pago Individual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let colab of viaje.colaboradores; let i = index" class="colaborador-row">
+                                <td>
+                                    <span class="badge bg-secondary-subtle text-secondary">{{ i + 1 }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary-subtle text-primary fw-semibold">
+                                        {{ colab.colb_Codigo }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-xs flex-shrink-0 me-2">
+                                            <span
+                                                [class]="'avatar-title rounded-circle ' + (colab.colb_Sexo === 'M' ? 'bg-primary-subtle text-primary' : 'bg-danger-subtle text-danger')">
+                                                <i [class]="getSexoIcon(colab.colb_Sexo)"></i>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fs-sm">{{ colab.colb_NombreCompleto }}</h6>
+                                            <small class="text-muted">{{ colab.colb_Identidad }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span [class]="'badge ' + (colab.colb_Sexo === 'M' ? 'bg-primary' : 'bg-danger')">
+                                        {{ colab.colb_Sexo === 'M' ? 'Masculino' : 'Femenino' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small>
+                                        <i class="ri-phone-line me-1"></i>{{ colab.colb_Telefono || 'N/A' }}
+                                    </small>
+                                </td>
+                                <td class="text-end">
+                                    <span class="badge bg-warning-subtle text-warning">
+                                        <i class="ri-route-line me-1"></i>{{ colab.clVj_DistanciaKm }} km
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-muted fs-sm">
+                                        L {{ colab.clVj_TarifaPorKm | number: '1.2-2' }}
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex flex-column align-items-end">
+                                        <h6 class="mb-0 text-success">
+                                            L {{ colab.pagoIndividual | number: '1.2-2' }}
+                                        </h6>
+                                        <small class="text-muted">
+                                            {{ calcularPorcentajeCosto(colab.pagoIndividual) | number: '1.1-1' }}% del
+                                            total
+                                        </small>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr class="fw-bold">
+                                <td colspan="5" class="text-end">TOTALES:</td>
+                                <td class="text-end">
+                                    <span class="badge bg-warning text-dark">
+                                        {{ viaje.totalKm }} km
+                                    </span>
+                                </td>
+                                <td class="text-end">-</td>
+                                <td class="text-end text-success fs-5">
+                                    L {{ viaje.totalPagar | number: '1.2-2' }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons Bottom -->
+        <div class="d-flex gap-2 justify-content-between mt-3">
+            <button class="btn btn-secondary" (click)="onBack()">
+                <i class="ri-arrow-left-line me-1"></i> Volver
+            </button>
+            <button class="btn btn-primary" (click)="onEdit()">
+                <i class="ri-edit-line me-1"></i> Editar Viaje
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient {
+        background: linear-gradient(135deg, rgba(var(--vz-primary-rgb), 0.1) 0%, rgba(var(--vz-primary-rgb), 0.05) 100%);
+    }
+
+    .colaborador-row {
+        transition: all 0.2s ease;
+    }
+
+    .colaborador-row:hover {
+        background-color: rgba(var(--vz-primary-rgb), 0.05);
+    }
+</style>

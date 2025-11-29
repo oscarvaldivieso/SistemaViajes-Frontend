@@ -17,19 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 
 // Services
 import { ViajesService } from 'src/app/core/services/viajes.service';
-
-
-// Temporary interface for viajes data structure
-interface Viaje {
-  viaj_Id?: number;
-  viaj_Fecha?: string;
-  sucursal_Nombre?: string;
-  transportista_Nombre?: string;
-  colaboradores_Count?: number;
-  viaj_DistanciaTotal?: number;
-  viaj_CostoTotal?: number;
-  usua_Creacion?: number;
-}
+import { ViajeListado } from 'src/app/models/viaje-list.model';
 
 @Component({
   selector: 'app-list',
@@ -50,7 +38,7 @@ interface Viaje {
 
 export class ListComponent implements OnInit, OnDestroy {
 
-  viajes: Viaje[] = [];
+  viajes: ViajeListado[] = [];
   isLoading = false;
   searchTerm = '';
   errorMessage = '';
@@ -110,13 +98,22 @@ export class ListComponent implements OnInit, OnDestroy {
     }
   }
 
-  filteredViajes(): Viaje[] {
+  filteredViajes(): ViajeListado[] {
     if (!this.searchTerm) {
       return this.viajes;
     }
     return this.viajes.filter(v =>
-      v.sucursal_Nombre?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      v.transportista_Nombre?.toLowerCase().includes(this.searchTerm.toLowerCase())
+      v.sucu_Nombre?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      v.transportista?.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  /**
+   * Obtiene el badge de color según la cantidad de colaboradores
+   */
+  getColaboradoresBadgeClass(cantidad: number): string {
+    if (cantidad >= 5) return 'bg-success';
+    if (cantidad >= 3) return 'bg-primary';
+    return 'bg-info';
   }
 }

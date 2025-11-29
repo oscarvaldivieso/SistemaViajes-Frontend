@@ -40,7 +40,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   sucursalesAsignadas: SucursalAsignada[] = [];
 
   selectedSucursalId: number | null = null;
-  distanciaInput: number = 0;
+  distanciaInput: number | null = null; // ✅ Cambiado a null
 
   isLoading = false;
   isSubmitting = false;
@@ -84,6 +84,7 @@ export class CreateComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           if (response.success) {
             this.sucursales = response.data;
+            console.log('✅ Sucursales cargadas:', this.sucursales.length);
           }
           this.isLoading = false;
         },
@@ -95,31 +96,33 @@ export class CreateComponent implements OnInit, OnDestroy {
       });
   }
 
-  // Validaciones para agregar sucursal
+  // ✅ Validación mejorada con conversión de tipo
   canAddSucursal(): boolean {
-    if (!this.selectedSucursalId || !this.distanciaInput) {
+    // Debe tener una sucursal seleccionada
+    if (!this.selectedSucursalId) {
       return false;
     }
 
-    // Validar que la distancia esté en el rango correcto (0 < distancia <= 50)
-    if (this.distanciaInput <= 0 || this.distanciaInput > 50) {
+    // Debe tener una distancia válida
+    if (!this.distanciaInput || this.distanciaInput < 0.1 || this.distanciaInput > 50) {
       return false;
     }
 
-    // Validar que no esté ya asignada
+    // No debe estar ya asignada - Convertir a número para comparar
+    const sucursalId = Number(this.selectedSucursalId);
     const yaAsignada = this.sucursalesAsignadas.some(
-      sa => sa.sucursal.sucu_Id === this.selectedSucursalId
+      sa => sa.sucursal.sucu_Id === sucursalId
     );
 
     return !yaAsignada;
   }
 
   getDistanciaValidationMessage(): string {
-    if (!this.distanciaInput) {
+    if (!this.distanciaInput || this.distanciaInput === 0) {
       return '';
     }
-    if (this.distanciaInput <= 0) {
-      return 'La distancia debe ser mayor que 0';
+    if (this.distanciaInput < 0.1) {
+      return 'La distancia debe ser al menos 0.1 km';
     }
     if (this.distanciaInput > 50) {
       return 'La distancia no puede ser mayor que 50 km';
@@ -128,39 +131,63 @@ export class CreateComponent implements OnInit, OnDestroy {
   }
 
   isSucursalAsignada(sucuId: number): boolean {
-    return this.sucursalesAsignadas.some(sa => sa.sucursal.sucu_Id === sucuId);
+    // Convertir a número por si acaso viene como string
+    const id = Number(sucuId);
+    return this.sucursalesAsignadas.some(sa => sa.sucursal.sucu_Id === id);
   }
 
   agregarSucursal(): void {
+    console.log('🔍 Intentando agregar sucursal...');
+    console.log('   - Sucursal seleccionada:', this.selectedSucursalId, 'Tipo:', typeof this.selectedSucursalId);
+    console.log('   - Distancia:', this.distanciaInput);
+    console.log('   - Can add?', this.canAddSucursal());
+
     if (!this.canAddSucursal()) {
-      if (this.isSucursalAsignada(this.selectedSucursalId!)) {
-        this.toastr.warning('Esta sucursal ya está asignada', 'Sucursal duplicada');
-      } else if (this.distanciaInput <= 0) {
-        this.toastr.warning('La distancia debe ser mayor que 0', 'Distancia inválida');
+      if (!this.selectedSucursalId) {
+        this.toastr.warning('Debe seleccionar una sucursal', 'Validación');
+      } else if (!this.distanciaInput || this.distanciaInput <= 0) {
+        this.toastr.warning('Debe ingresar una distancia válida', 'Validación');
+      } else if (this.distanciaInput < 0.1) {
+        this.toastr.warning('La distancia debe ser al menos 0.1 km', 'Distancia inválida');
       } else if (this.distanciaInput > 50) {
         this.toastr.warning('La distancia no puede ser mayor que 50 km', 'Distancia inválida');
+      } else if (this.isSucursalAsignada(this.selectedSucursalId!)) {
+        this.toastr.warning('Esta sucursal ya está asignada', 'Sucursal duplicada');
       }
       return;
     }
 
-    const sucursal = this.sucursales.find(s => s.sucu_Id === this.selectedSucursalId);
+    // ✅ Convertir a número para la comparación
+    const sucursalId = Number(this.selectedSucursalId);
+    console.log('   - Buscando sucursal con ID numérico:', sucursalId);
+    console.log('   - IDs disponibles:', this.sucursales.map(s => s.sucu_Id));
+
+    const sucursal = this.sucursales.find(s => s.sucu_Id === sucursalId);
     if (sucursal) {
       this.sucursalesAsignadas.push({
         sucursal: sucursal,
-        distancia: this.distanciaInput
+        distancia: this.distanciaInput!
       });
+
+      console.log('✅ Sucursal agregada:', sucursal.sucu_Nombre);
+      console.log('   Total asignadas:', this.sucursalesAsignadas.length);
 
       // Limpiar selección
       this.selectedSucursalId = null;
-      this.distanciaInput = 0;
+      this.distanciaInput = null;
 
-      this.toastr.success('Sucursal agregada correctamente', 'Éxito');
+      this.toastr.success(`Sucursal "${sucursal.sucu_Nombre}" agregada correctamente`, 'Éxito');
+    } else {
+      console.error('❌ No se encontró la sucursal con ID:', sucursalId);
+      console.error('   Sucursales disponibles:', this.sucursales);
+      this.toastr.error('No se pudo encontrar la sucursal seleccionada', 'Error');
     }
   }
 
   eliminarSucursal(index: number): void {
     const sucursal = this.sucursalesAsignadas[index];
     this.sucursalesAsignadas.splice(index, 1);
+    console.log('🗑️ Sucursal eliminada:', sucursal.sucursal.sucu_Nombre);
     this.toastr.info(`Sucursal "${sucursal.sucursal.sucu_Nombre}" eliminada`, 'Eliminada');
   }
 
@@ -169,6 +196,10 @@ export class CreateComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    console.log('📝 Intentando enviar formulario...');
+    console.log('   - Formulario válido?', this.colaboradorForm.valid);
+    console.log('   - Sucursales asignadas:', this.sucursalesAsignadas.length);
+
     // Validar formulario
     if (this.colaboradorForm.invalid) {
       Object.keys(this.colaboradorForm.controls).forEach(key => {
