@@ -103,7 +103,25 @@ export class AuthenticationService {
             }),
             catchError((error: any) => {
                 console.error('❌ Error en login:', error);
-                const errorMessage = error?.error?.Mensaje || error?.error?.message || 'Error al iniciar sesión';
+
+                // Extraer el mensaje de error según el formato de la respuesta del backend
+                let errorMessage = 'Error al iniciar sesión';
+
+                if (error?.error?.message) {
+                    // Caso: {message: "Usuario o contraseña incorrectos"}
+                    errorMessage = error.error.message;
+                } else if (error?.error?.data?.message) {
+                    // Caso: {data: {message: "..."}}
+                    errorMessage = error.error.data.message;
+                } else if (error?.error?.Mensaje) {
+                    // Caso alternativo con mayúscula
+                    errorMessage = error.error.Mensaje;
+                } else if (error?.message) {
+                    // Mensaje genérico del error
+                    errorMessage = error.message;
+                }
+
+                console.error('📢 Mensaje de error extraído:', errorMessage);
                 this.store.dispatch(loginFailure({ error: errorMessage }));
                 return throwError(() => new Error(errorMessage));
             })

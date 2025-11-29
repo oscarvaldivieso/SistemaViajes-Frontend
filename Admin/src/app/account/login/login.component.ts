@@ -56,7 +56,12 @@ export class LoginComponent implements OnInit {
   /**
    * Maneja el envío del formulario de login
    */
-  login() {
+  login(event?: Event) {
+    // Prevenir el comportamiento por defecto del formulario
+    if (event) {
+      event.preventDefault();
+    }
+
     this.submitted = true;
 
     // Mostrar errores de validación
@@ -110,12 +115,32 @@ export class LoginComponent implements OnInit {
         }, 500);
       },
       error: (error) => {
+        console.error('🔴 Error completo recibido en componente:', error);
+        console.error('🔴 Tipo de error:', typeof error);
+        console.error('🔴 error.message:', error?.message);
+
         this.loading = false;
-        this.error = error.message;
+
+        // Extraer el mensaje de error con múltiples fallbacks
+        let errorMessage = 'Usuario o contraseña incorrectos';
+
+        if (typeof error === 'string') {
+          // Si el error es un string directamente
+          errorMessage = error;
+        } else if (error?.message) {
+          // Si tiene propiedad message
+          errorMessage = error.message;
+        } else if (error?.error?.message) {
+          // Si está dentro de error.error.message
+          errorMessage = error.error.message;
+        }
+
+        this.error = errorMessage;
+        console.log('📢 Mensaje a mostrar en toast:', errorMessage);
 
         // Mostrar mensaje de error con toastr
         this.toastr.error(
-          error.message || 'Usuario o contraseña incorrectos',
+          errorMessage,
           'Error de autenticación',
           {
             timeOut: 4000,

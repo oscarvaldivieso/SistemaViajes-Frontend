@@ -1,0 +1,337 @@
+// ============================================
+// Login Minimalista - Usando variables CSS del sistema
+// ============================================
+
+// ============================================
+// Contenedor principal
+// ============================================
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7f7f7;
+    padding: 1rem;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+// ============================================
+// Tarjeta de login
+// ============================================
+.login-card {
+    background: #fff;
+    border-radius: 0.3rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem 2rem;
+    border: 1px solid #e3e6e9;
+
+    @media (max-width: 576px) {
+        padding: 2rem 1.5rem;
+    }
+}
+
+// ============================================
+// Header
+// ============================================
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background-color: #3762ea;
+    border-radius: 0.3rem;
+    margin-bottom: 1.25rem;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    i {
+        font-size: 2rem;
+        color: #fff;
+    }
+}
+
+.brand-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #0f1114;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.brand-subtitle {
+    font-size: 0.95rem;
+    color: #878a99;
+    margin: 0;
+}
+
+// ============================================
+// Formulario
+// ============================================
+form {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2b313e;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: #0f1114;
+    background-color: #fff;
+    border: 1px solid #e3e6e9;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &::placeholder {
+        color: #adb5bd;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: #3762ea;
+        box-shadow: 0 0 0 3px rgba(55, 98, 234, 0.1);
+    }
+
+    &.is-invalid {
+        border-color: #ff6c6c;
+
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(255, 108, 108, 0.1);
+        }
+    }
+}
+
+.password-input-wrapper {
+    position: relative;
+
+    .form-control {
+        padding-right: 3rem;
+    }
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    padding: 0 1rem;
+    background: transparent;
+    border: none;
+    color: #878a99;
+    cursor: pointer;
+    transition: color 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        color: #0f1114;
+    }
+
+    &:focus {
+        outline: none;
+        color: #3762ea;
+    }
+
+    i {
+        font-size: 1.1rem;
+    }
+}
+
+.invalid-feedback {
+    display: block;
+    margin-top: 0.375rem;
+    font-size: 0.825rem;
+    color: #ff6c6c;
+    padding-left: 0.25rem;
+}
+
+// ============================================
+// Footer del formulario
+// ============================================
+.form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+
+    @media (max-width: 400px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #3762ea;
+    }
+
+    span {
+        font-size: 0.875rem;
+        color: #2b313e;
+    }
+}
+
+.forgot-link {
+    font-size: 0.875rem;
+    color: #3762ea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
+
+    &:hover {
+        color: #2a4dbd;
+        text-decoration: underline;
+    }
+}
+
+// ============================================
+// Botón de login
+// ============================================
+.btn-login {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+    background-color: #3762ea;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    &:hover:not(:disabled) {
+        background-color: #2a4dbd;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(55, 98, 234, 0.3);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(55, 98, 234, 0.2);
+    }
+}
+
+// ============================================
+// Footer
+// ============================================
+.login-footer {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e3e6e9;
+
+    p {
+        margin: 0;
+        font-size: 0.8125rem;
+        color: #878a99;
+    }
+}
+
+// ============================================
+// Dark mode support
+// ============================================
+[data-bs-theme="dark"] {
+    .login-wrapper {
+        background-color: #0f1114;
+    }
+
+    .login-card {
+        background: #1f242e;
+        border-color: #2b313e;
+    }
+
+    .brand-title {
+        color: #fff;
+    }
+
+    .brand-subtitle {
+        color: #adb5bd;
+    }
+
+    .form-label {
+        color: #e9ebec;
+    }
+
+    .form-control {
+        color: #fff;
+        background-color: #2b313e;
+        border-color: #878a99;
+
+        &::placeholder {
+            color: #adb5bd;
+        }
+
+        &:focus {
+            background-color: #2b313e;
+            border-color: #3762ea;
+        }
+    }
+
+    .password-toggle {
+        color: #adb5bd;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    .checkbox-label span {
+        color: #e9ebec;
+    }
+
+    .login-footer {
+        border-top-color: #2b313e;
+
+        p {
+            color: #adb5bd;
+        }
+    }
+}

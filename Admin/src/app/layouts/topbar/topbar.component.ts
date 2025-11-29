@@ -64,7 +64,24 @@ export class TopbarComponent {
 
   ngOnInit(): void {
     this.element = document.documentElement;
-    this.userData = this.TokenStorageService.getUser();
+
+    // Obtener datos del usuario autenticado desde localStorage
+    const currentUser = this.authService.getAuthenticatedUser();
+    if (currentUser) {
+      this.userData = {
+        first_name: currentUser.Usua_Usuario || 'Usuario',
+        last_name: '',
+        role: currentUser.Role_Descripcion || 'Administrador'
+      };
+      console.log('👤 Usuario cargado en topbar:', this.userData);
+    } else {
+      this.userData = {
+        first_name: 'Usuario',
+        last_name: '',
+        role: 'Invitado'
+      };
+    }
+
     this.cartData = cartList
     this.cartData.map((x: any) => {
       x['total'] = (x['qty'] * x['price']).toFixed(2)
@@ -160,9 +177,9 @@ export class TopbarComponent {
       document.documentElement.classList.add('mode-auto')
     } else {
       this.store.dispatch(changeMode({ mode }));
-    this.store.select(getLayoutmode).subscribe((mode) => {
-      document.documentElement.setAttribute('data-bs-theme', mode);
-    })
+      this.store.select(getLayoutmode).subscribe((mode) => {
+        document.documentElement.setAttribute('data-bs-theme', mode);
+      })
       document.documentElement.classList.remove('mode-auto')
       document.documentElement.setAttribute('data-topbar', mode);
     }

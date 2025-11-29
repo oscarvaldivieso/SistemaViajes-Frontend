@@ -1,137 +1,74 @@
-<section class="auth-page-wrapper py-5 position-relative d-flex align-items-center justify-content-center min-vh-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-11">
-                <div class="card mb-0">
-                    <div class="row g-0 align-items-center">
-                        <div class="col-xxl-5">
-                            <div class="card auth-card bg-secondary h-100 border-0 shadow-none d-none d-sm-block mb-0">
-                                <div class="card-body py-5 d-flex justify-content-between flex-column">
-                                    <div class="text-center">
-                                        <h3 class="text-white">Inicia tu viaje con nosotros</h3>
-                                        <p class="text-white opacity-75 fs-base">Sistema de gestión de viajes y
-                                            colaboradores</p>
-                                    </div>
-
-                                    <div
-                                        class="auth-effect-main my-5 position-relative rounded-circle d-flex align-items-center justify-content-center mx-auto">
-                                        <div
-                                            class="effect-circle-1 position-relative mx-auto rounded-circle d-flex align-items-center justify-content-center">
-                                            <div
-                                                class="effect-circle-2 position-relative mx-auto rounded-circle d-flex align-items-center justify-content-center">
-                                                <div
-                                                    class="effect-circle-3 mx-auto rounded-circle position-relative text-white fs-4xl d-flex align-items-center justify-content-center">
-                                                    Sistema <span class="text-primary ms-1">Viajes</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <p class="text-white opacity-75 mb-0 mt-3">
-                                            &copy; {{year}} Sistema de Viajes
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end col-->
-                        <div class="col-xxl-6 mx-auto">
-                            <div class="card mb-0 border-0 shadow-none mb-0">
-                                <div class="card-body p-sm-5 m-lg-4">
-                                    <div class="text-center mt-5">
-                                        <h5 class="fs-3xl">Bienvenido</h5>
-                                        <p class="text-muted">Ingresa tus credenciales para continuar</p>
-                                    </div>
-                                    <div class="p-2 mt-5">
-                                        <form [formGroup]="loginForm" (ngSubmit)="login()">
-
-                                            <div class="mb-3">
-                                                <label for="username" class="form-label">Usuario <span
-                                                        class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" formControlName="usuario"
-                                                        id="username"
-                                                        [ngClass]="{ 'is-invalid': submitted && form['usuario'].errors }"
-                                                        placeholder="Ingrese su usuario" required>
-                                                    @if (submitted && form['usuario'].errors) {
-                                                    <div class="invalid-feedback">
-                                                        @if (form['usuario'].errors['required']) {
-                                                        <div>El usuario es requerido</div>
-                                                        }
-                                                        @if (form['usuario'].errors['minlength']) {
-                                                        <div>El usuario debe tener al menos 3 caracteres</div>
-                                                        }
-                                                    </div>
-                                                    }
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <div class="float-end">
-                                                    <a routerLink="/auth/pass-reset" class="text-muted">¿Olvidó su
-                                                        contraseña?</a>
-                                                </div>
-                                                <label class="form-label" for="password-input">Contraseña <span
-                                                        class="text-danger">*</span></label>
-                                                <div class="position-relative auth-pass-inputgroup mb-3">
-                                                    <input [type]="fieldTextType ? 'text' : 'password'"
-                                                        formControlName="contrasena"
-                                                        [ngClass]="{ 'is-invalid': submitted && form['contrasena'].errors }"
-                                                        class="form-control pe-5 password-input"
-                                                        placeholder="Ingrese su contraseña" id="password-input"
-                                                        required>
-                                                    <button
-                                                        class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                        type="button" id="password-addon"
-                                                        (click)="toggleFieldTextType()">
-                                                        <i class="ri-eye-fill align-middle"
-                                                            [ngClass]="{'ri-eye-off-fill': !fieldTextType, 'ri-eye-fill': fieldTextType}">
-                                                        </i>
-                                                    </button>
-                                                    @if (submitted && form['contrasena'].errors) {
-                                                    <div class="invalid-feedback">
-                                                        @if (form['contrasena'].errors['required']) {
-                                                        <div>La contraseña es requerida</div>
-                                                        }
-                                                        @if (form['contrasena'].errors['minlength']) {
-                                                        <div>La contraseña debe tener al menos 4 caracteres</div>
-                                                        }
-                                                    </div>
-                                                    }
-                                                </div>
-                                            </div>
-
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="auth-remember-check">
-                                                <label class="form-check-label"
-                                                    for="auth-remember-check">Recordarme</label>
-                                            </div>
-
-                                            <div class="mt-4">
-                                                <button class="btn btn-primary w-100" type="submit"
-                                                    [disabled]="loading">
-                                                    @if (loading) {
-                                                    <span class="spinner-border spinner-border-sm me-2" role="status"
-                                                        aria-hidden="true"></span>
-                                                    }
-                                                    {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div><!-- end card body -->
-                            </div><!-- end card -->
-                        </div>
-                        <!--end col-->
-                    </div>
-                    <!--end row-->
+<div class="login-wrapper">
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo y título -->
+            <div class="login-header">
+                <div class="brand-logo">
+                    <i class="ri-plane-fill"></i>
                 </div>
+                <h1 class="brand-title">Sistema Viajes</h1>
+                <p class="brand-subtitle">Ingresa a tu cuenta</p>
             </div>
-            <!--end col-->
+
+            <!-- Formulario de login -->
+            <form [formGroup]="loginForm" (ngSubmit)="login($event)">
+
+                <!-- Campo Usuario -->
+                <div class="form-group">
+                    <label for="username" class="form-label">Usuario</label>
+                    <input type="text" id="username" class="form-control" formControlName="usuario"
+                        [ngClass]="{ 'is-invalid': submitted && form['usuario'].errors }"
+                        placeholder="Ingresa tu usuario" autocomplete="username">
+                    @if (submitted && form['usuario'].errors) {
+                    <div class="invalid-feedback">
+                        @if (form['usuario'].errors['required']) {
+                        <span>El usuario es requerido</span>
+                        }
+                        @if (form['usuario'].errors['minlength']) {
+                        <span>El usuario debe tener al menos 3 caracteres</span>
+                        }
+                    </div>
+                    }
+                </div>
+
+                <!-- Campo Contraseña -->
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="password-input-wrapper">
+                        <input [type]="fieldTextType ? 'text' : 'password'" id="password" class="form-control"
+                            formControlName="contrasena"
+                            [ngClass]="{ 'is-invalid': submitted && form['contrasena'].errors }"
+                            placeholder="Ingresa tu contraseña" autocomplete="current-password">
+                        <button type="button" class="password-toggle" (click)="toggleFieldTextType()" tabindex="-1">
+                            <i [class]="fieldTextType ? 'ri-eye-off-line' : 'ri-eye-line'"></i>
+                        </button>
+                    </div>
+                    @if (submitted && form['contrasena'].errors) {
+                    <div class="invalid-feedback">
+                        @if (form['contrasena'].errors['required']) {
+                        <span>La contraseña es requerida</span>
+                        }
+                        @if (form['contrasena'].errors['minlength']) {
+                        <span>La contraseña debe tener al menos 4 caracteres</span>
+                        }
+                    </div>
+                    }
+                </div>
+                <!-- Botón de login -->
+                <button type="submit" class="btn-login" [disabled]="loading">
+                    @if (loading) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    <span>Iniciando sesión...</span>
+                    } @else {
+                    <span>Iniciar Sesión</span>
+                    }
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>&copy; {{year}} Sistema de Viajes</p>
+            </div>
         </div>
-        <!--end row-->
     </div>
-    <!--end container-->
-</section>
+</div>

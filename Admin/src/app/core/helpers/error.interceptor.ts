@@ -12,12 +12,18 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
             if (err.status === 401) {
-                // auto logout if 401 response returned from api
-                this.authenticationService.logout();
-                location.reload();
+                // NO recargar la página si el error viene del endpoint de Login
+                // En ese caso, solo queremos mostrar el mensaje de error
+                const isLoginRequest = request.url.includes('/Login');
+
+                if (!isLoginRequest) {
+                    // auto logout if 401 response returned from api (sesión expirada)
+                    this.authenticationService.logout();
+                    location.reload();
+                }
             }
-            const error = err.error.message || err.statusText;
-            return throwError(error);
+            // Devolver el error completo para que el servicio lo maneje
+            return throwError(() => err);
         }))
     }
 }
