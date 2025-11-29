@@ -15,6 +15,9 @@ const routes: Routes = [
     path: 'general', loadChildren: () => import('./general/general.module').then(m => m.GeneralModule)
   },
   {
+    path: 'oper', loadChildren: () => import('./oper/oper.module').then(m => m.OperModule)
+  },
+  {
     path: 'hotel', loadChildren: () => import('./hotel/hotel.module').then(m => m.HotelModule)
   },
   {

@@ -49,34 +49,11 @@ export const MENU: MenuItem[] = [
         isTitle: true
     },
     {
-        id: 12,
-        label: 'MENUITEMS.APPS.LIST.RESTAURANTE',
-        icon: 'ph-storefront',
-        parentId: 8,
-        subItems: [
-            {
-                id: 13,
-                label: 'MENUITEMS.APPS.LIST.RESTAURANTES',
-                link: '/restaurante/restaurantes/list',
-                parentId: 12
-            }
-            
-        ]
-    },
-    {
         id: 24,
-        label: 'MENUITEMS.APPS.LIST.VUELO',
-        icon: 'ri ri-plane-fill ',
-        parentId: 8,
-        subItems: [
-            {
-                id: 25,
-                label: 'MENUITEMS.APPS.LIST.VUELOS',
-                link: '/vuelo/vuelos/list',
-                parentId: 24,
-                isCollapsed: true
-            }
-        ]
+        label: 'MENUITEMS.APPS.LIST.VIAJES',
+        icon: 'ri ri-bus-fill ',
+        link: '/oper/viajes/list',
+        parentId: 8
     },
     {
         id: 39,
@@ -85,53 +62,22 @@ export const MENU: MenuItem[] = [
         parentId: 8,
         subItems: [
             {
-                id: 40,
-                label: 'MENUITEMS.APPS.LIST.EMPLEADOS',
-                link: '/general/empleados/list',
-                parentId: 39
-            },
-            {
-                id: 41,
-                label: 'MENUITEMS.APPS.LIST.CLIENTES',
-                link: '/general/clientes/list',
-                parentId: 39
-            },
-            {
-                id: 42,
-                label: 'MENUITEMS.APPS.LIST.TOURS',
-                link: '/general/tours/list',
-                parentId: 39
-            },
-            {
                 id: 80,
                 label: 'MENUITEMS.APPS.LIST.SUCURSALES',
                 link: '/general/sucursales/list',
                 parentId: 39
             },
+            {
+                id: 81,
+                label: 'MENUITEMS.APPS.LIST.COLABORADORES',
+                link: '/general/colaboradores/list',
+                parentId: 39
+            }
 
         ]
     },
-    
-    {
-        id: 43,
-        label: 'MENUITEMS.APPS.LIST.HOTEL',
-        icon: 'ri  ri-hotel-bed-fill',
-        parentId: 8,
-        subItems: [
-            {
-                id: 44,
-                label: 'MENUITEMS.APPS.LIST.HOTELES',
-                link: '/hotel/hoteles/list',
-                parentId: 43
-            },
-            {
-                id: 45,
-                label: 'MENUITEMS.APPS.LIST.HABITACIONES',
-                link: '/hotel/habitaciones/list',
-                parentId: 43
-            }
-        ]
-    },
+
+
     {
         id: 46,
         label: 'MENUITEMS.APPS.LIST.ACCESO',
@@ -152,20 +98,7 @@ export const MENU: MenuItem[] = [
             }
         ]
     },
-    {
-        id: 48,
-        label: 'MENUITEMS.APPS.LIST.PAQUETE',
-        icon: 'ri  ri-lock-2-fill ',
-        parentId: 8,
-        subItems: [
-            {
-                id: 49,
-                label: 'MENUITEMS.APPS.LIST.PAQUETES',
-                link: '/paquete/paquetes/list',
-                parentId: 48
-            }
-        ]
-    }
-    
-    
+
+
+
 ]
