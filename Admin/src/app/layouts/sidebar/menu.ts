@@ -56,6 +56,13 @@ export const MENU: MenuItem[] = [
         parentId: 8
     },
     {
+        id: 25,
+        label: 'MENUITEMS.APPS.LIST.REPORTE',
+        icon: 'ri ri-file-text-fill ',
+        link: '/oper/viajes/report',
+        parentId: 8
+    },
+    {
         id: 39,
         label: 'MENUITEMS.APPS.LIST.GENERAL',
         icon: 'ph-file-text',
@@ -78,26 +85,6 @@ export const MENU: MenuItem[] = [
     },
 
 
-    {
-        id: 46,
-        label: 'MENUITEMS.APPS.LIST.ACCESO',
-        icon: 'ri  ri-lock-2-fill ',
-        parentId: 8,
-        subItems: [
-            {
-                id: 47,
-                label: 'MENUITEMS.APPS.LIST.USUARIO',
-                link: '/acceso/usuarios/list',
-                parentId: 46
-            },
-            {
-                id: 50,
-                label: 'MENUITEMS.APPS.LIST.ROLES',
-                link: '/acceso/roles/list',
-                parentId: 46
-            }
-        ]
-    },
 
 
 

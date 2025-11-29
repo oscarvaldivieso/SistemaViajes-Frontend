@@ -6,6 +6,7 @@ import { ListComponent } from './list/list.component';
 import { CreateComponent } from './create/create.component';
 import { DetailsComponent } from './details/details.component';
 import { EditComponent } from './edit/edit.component';
+import { ReportComponent } from './report/report.component';
 
 const routes: Routes = [
     {
@@ -23,6 +24,10 @@ const routes: Routes = [
     {
         path: 'edit/:id',
         component: EditComponent
+    },
+    {
+        path: 'report',
+        component: ReportComponent
     }
 ];
 
