@@ -7,7 +7,7 @@ import { AuthfakeauthenticationService } from '../services/authfake.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard  {
+export class AuthGuard {
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
@@ -15,25 +15,16 @@ export class AuthGuard  {
     ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    //     if (environment.defaultauth === 'firebase') {
-    //         const currentUser = this.authenticationService.currentUser();
-    //         if (currentUser) {
-    //             // logged in so return true
-    //             return true;
-    //         }
-    //     } else {
-    //         const currentUser = this.authFackservice.currentUserValue;
-    //         if (currentUser) {
-    //             // logged in so return true
-    //             return true;
-    //         }
-    //         // check if user data is in storage is logged in via API.
-    //         if(localStorage.getItem('currentUser')) {
-    //             return true;
-    //         }
-    //  }
-        // // not logged in so redirect to login page with the return url
-        // this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
-        return true;
+        // Verificar si el usuario está autenticado usando JWT
+        if (this.authenticationService.isAuthenticated()) {
+            // Usuario autenticado, permitir acceso
+            return true;
+        }
+
+        // Usuario no autenticado, redirigir al login con la URL de retorno
+        this.router.navigate(['/auth/login'], {
+            queryParams: { returnUrl: state.url }
+        });
+        return false;
     }
 }
