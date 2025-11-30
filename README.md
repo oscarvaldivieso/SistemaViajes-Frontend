@@ -10,19 +10,19 @@ Sistema integral de gestión de viajes desarrollado con Angular 18. Esta aplicac
 ## Capturas de Pantalla
 
 ### Gestión de Sucursales
-![Listado de Sucursales](./screenshots/sucursales-list.png)
+![Listado de Sucursales](./Admin/screenshots/sucursales-list.png)
 
 ### Gestión de Colaboradores
-![Listado de Colaboradores](./screenshots/colaboradores-list.png)
+![Listado de Colaboradores](./Admin/screenshots/colaboradores-list.png)
 
 ### Gestión de Transportistas
-![Listado de Transportistas](./screenshots/transportistas-list.png)
+![Listado de Transportistas](./Admin/screenshots/transportistas-list.png)
 
 ### Gestión de Viajes
-![Módulo de Viajes](./screenshots/viajes.png)
+![Módulo de Viajes](./Admin/screenshots/viajes.png)
 
 ### Reportes de Viajes
-![Reporte de Viajes](./screenshots/reporte-viajes.png)
+![Reporte de Viajes](./Admin/screenshots/reporte-viajes.png)
 
 ## 📋 Tabla de Contenidos
 
