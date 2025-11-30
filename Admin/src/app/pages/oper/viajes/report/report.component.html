@@ -1,1 +1,332 @@
-<p>report works!</p>
+<!-- Custom Breadcrumb Header -->
+<app-breadcrumbs [title]="'Reporte de Viajes'" [icon]="'ri-file-chart-line'" [badgeIcon]="'ri-file-list-3-line'"
+    [badgeCount]="totalViajes" [breadcrumbItems]="[
+    { label: 'Operaciones' },
+    { label: 'Viajes' },
+    { label: 'Reporte', active: true }
+  ]">
+</app-breadcrumbs>
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Filtros Card -->
+        <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-primary bg-gradient border-0">
+                <h5 class="card-title text-white mb-0">
+                    <i class="ri-filter-3-line me-2"></i>Filtros del Reporte
+                </h5>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="reportForm">
+                    <div class="row g-3 align-items-end">
+                        <!-- Fecha Inicio -->
+                        <div class="col-md-3">
+                            <label for="fechaInicio" class="form-label fw-semibold">
+                                <i class="ri-calendar-event-line me-1 text-primary"></i>Fecha Inicio
+                            </label>
+                            <input type="text" class="form-control" id="fechaInicio" formControlName="fechaInicio"
+                                placeholder="Seleccione fecha">
+                        </div>
+
+                        <!-- Fecha Fin -->
+                        <div class="col-md-3">
+                            <label for="fechaFin" class="form-label fw-semibold">
+                                <i class="ri-calendar-check-line me-1 text-primary"></i>Fecha Fin
+                            </label>
+                            <input type="text" class="form-control" id="fechaFin" formControlName="fechaFin"
+                                placeholder="Seleccione fecha">
+                        </div>
+
+                        <!-- Transportista -->
+                        <div class="col-md-3">
+                            <label for="transportista" class="form-label fw-semibold">
+                                <i class="ri-truck-line me-1 text-primary"></i>Transportista
+                                <span class="text-muted">(Opcional)</span>
+                            </label>
+                            <select class="form-select" id="transportista" formControlName="tran_Id">
+                                <option [value]="null">Todos los transportistas</option>
+                                <option *ngFor="let t of transportistas" [value]="t.tran_Id">
+                                    {{ t.tran_NombreCompleto }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="col-md-3">
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-primary flex-fill" (click)="generarReporte()"
+                                    [disabled]="isLoading || reportForm.invalid">
+                                    <i class="ri-file-chart-line me-1"></i>
+                                    <span *ngIf="!isLoading">Generar</span>
+                                    <span *ngIf="isLoading">
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                        Cargando...
+                                    </span>
+                                </button>
+                                <button type="button" class="btn btn-success" (click)="exportarExcel()"
+                                    [disabled]="!reportGenerated || detalleViajes.length === 0"
+                                    title="Exportar a Excel">
+                                    <i class="ri-file-excel-2-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Error Alert -->
+        <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+            <i class="ri-error-warning-line me-2"></i>
+            <strong>Error:</strong> {{ errorMessage }}
+            <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+        </div>
+
+        <!-- Métricas Principales -->
+        <div *ngIf="reportGenerated" class="row g-3 mb-3">
+            <!-- Total Viajes -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-primary-subtle text-primary rounded-circle fs-3">
+                                    <i class="ri-roadster-line"></i>
+                                </span>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <p class="text-muted mb-1 fs-xs fw-medium text-uppercase">Total Viajes</p>
+                                <h4 class="mb-0 fw-bold">{{ totalViajes }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Colaboradores -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-info-subtle text-info rounded-circle fs-3">
+                                    <i class="ri-team-line"></i>
+                                </span>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <p class="text-muted mb-1 fs-xs fw-medium text-uppercase">Colaboradores</p>
+                                <h4 class="mb-0 fw-bold">{{ totalColaboradores }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Kilómetros -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-warning-subtle text-warning rounded-circle fs-3">
+                                    <i class="ri-route-line"></i>
+                                </span>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <p class="text-muted mb-1 fs-xs fw-medium text-uppercase">Total Km</p>
+                                <h4 class="mb-0 fw-bold">{{ totalKilometros | number: '1.2-2' }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total a Pagar -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-success-subtle text-success rounded-circle fs-3">
+                                    <i class="ri-money-dollar-circle-line"></i>
+                                </span>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <p class="text-muted mb-1 fs-xs fw-medium text-uppercase">Total a Pagar</p>
+                                <h4 class="mb-0 fw-bold text-success">L {{ totalAPagar | number: '1.2-2' }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen por Transportista -->
+        <div *ngIf="reportGenerated && resumenTransportistas.length > 0" class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-secondary  border-0">
+                <h5 class="card-title text-white mb-0">
+                    <i class="ri-truck-line me-2"></i>Resumen por Transportista
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="fw-semibold">Transportista</th>
+                                <th class="fw-semibold">Identidad</th>
+                                <th class="fw-semibold">Teléfono</th>
+                                <th class="fw-semibold text-end">Tarifa/Km</th>
+                                <th class="fw-semibold text-center">Viajes</th>
+                                <th class="fw-semibold text-center">Colaboradores</th>
+                                <th class="fw-semibold text-end">Total Km</th>
+                                <th class="fw-semibold text-end">Total a Pagar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let t of resumenTransportistas">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-xs flex-shrink-0 me-2">
+                                            <span class="avatar-title bg-primary-subtle text-primary rounded-circle">
+                                                <i class="ri-user-line"></i>
+                                            </span>
+                                        </div>
+                                        <span class="fw-medium">{{ t.tran_Nombre }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ t.tran_Identidad }}</td>
+                                <td>
+                                    <i class="ri-phone-line text-muted me-1"></i>{{ t.tran_Telefono }}
+                                </td>
+                                <td class="text-end">L {{ t.tran_TarifaPorKm | number: '1.2-2' }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary-subtle text-primary">{{ t.totalViajes }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-info-subtle text-info">{{ t.totalColaboradores }}</span>
+                                </td>
+                                <td class="text-end">{{ t.totalKilometros | number: '1.2-2' }} km</td>
+                                <td class="text-end">
+                                    <span class="fw-bold text-success">L {{ t.totalAPagar | number: '1.2-2' }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr class="fw-bold">
+                                <td colspan="4" class="text-end">TOTALES:</td>
+                                <td class="text-center">{{ totalViajes }}</td>
+                                <td class="text-center">{{ totalColaboradores }}</td>
+                                <td class="text-end">{{ totalKilometros | number: '1.2-2' }} km</td>
+                                <td class="text-end text-success">L {{ totalAPagar | number: '1.2-2' }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalle de Viajes -->
+        <div *ngIf="reportGenerated && detalleViajes.length > 0" class="card border-0 shadow-sm">
+            <div class="card-header bg-secondary border-0">
+                <h5 class="card-title text-white mb-0">
+                    <i class="ri-file-list-3-line me-2"></i>Detalle de Viajes
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="fw-semibold">ID</th>
+                                <th class="fw-semibold">Fecha</th>
+                                <th class="fw-semibold">Sucursal</th>
+                                <th class="fw-semibold">Transportista</th>
+                                <th class="fw-semibold">Colaborador</th>
+                                <th class="fw-semibold">DNI</th>
+                                <th class="fw-semibold text-end">Distancia</th>
+                                <th class="fw-semibold text-end">Tarifa/Km</th>
+                                <th class="fw-semibold text-end">Monto</th>
+                                <th class="fw-semibold">Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let v of detalleViajes">
+                                <td>
+                                    <span class="badge bg-primary-subtle text-primary">{{ v.viaj_Id }}</span>
+                                </td>
+                                <td>
+                                    <small>{{ formatDate(v.viaj_Fecha) }}</small>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="fw-medium">{{ v.sucu_Nombre }}</div>
+                                        <small class="text-muted">{{ v.sucu_Direccion }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="fw-medium">{{ v.tran_Nombre }}</div>
+                                        <small class="text-muted">
+                                            <i class="ri-phone-line"></i> {{ v.tran_Telefono }}
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="fw-medium">{{ v.colb_Nombre }}</div>
+                                        <small class="text-muted">Código: {{ v.colb_Codigo }}</small>
+                                    </div>
+                                </td>
+                                <td>{{ v.colb_DNI }}</td>
+                                <td class="text-end">{{ v.clVj_DistanciaKm | number: '1.2-2' }} km</td>
+                                <td class="text-end">L {{ v.clVj_TarifaPorKm | number: '1.2-2' }}</td>
+                                <td class="text-end">
+                                    <span class="fw-semibold text-success">L {{ v.montoPorColaborador | number: '1.2-2'
+                                        }}</span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ v.usuarioRegistro }}</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-light border-top">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted">
+                        <i class="ri-file-list-line me-1"></i>
+                        Total de registros: <strong>{{ detalleViajes.length }}</strong>
+                    </span>
+                    <button type="button" class="btn btn-sm btn-success" (click)="exportarExcel()">
+                        <i class="ri-file-excel-2-line me-1"></i>Exportar a Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div *ngIf="!reportGenerated && !isLoading" class="text-center py-5">
+            <div class="avatar-lg mx-auto mb-4">
+                <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-1">
+                    <i class="ri-file-chart-line"></i>
+                </div>
+            </div>
+            <h5 class="mt-2">Genere un reporte para visualizar los datos</h5>
+            <p class="text-muted">Seleccione un rango de fechas y opcionalmente un transportista, luego haga clic en
+                "Generar"</p>
+        </div>
+
+        <!-- Estado Sin Datos -->
+        <div *ngIf="reportGenerated && detalleViajes.length === 0 && !isLoading" class="text-center py-5">
+            <div class="avatar-lg mx-auto mb-4">
+                <div class="avatar-title bg-warning-subtle text-warning rounded-circle fs-1">
+                    <i class="ri-inbox-line"></i>
+                </div>
+            </div>
+            <h5 class="mt-2">No se encontraron viajes</h5>
+            <p class="text-muted">No hay viajes registrados en el rango de fechas seleccionado</p>
+        </div>
+    </div>
+</div>

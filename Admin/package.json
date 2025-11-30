@@ -79,6 +79,7 @@
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.14.1",
     "tslib": "^2.6.3",
+    "xlsx": "^0.18.5",
     "zone.js": "0.14.7"
   },
   "devDependencies": {
@@ -90,6 +91,7 @@
     "@types/leaflet-routing-machine": "^3.2.8",
     "@types/lodash": "^4.17.5",
     "@types/prismjs": "^1.26.4",
+    "@types/xlsx": "^0.0.35",
     "jasmine-core": "~5.1.2",
     "karma": "~6.4.3",
     "karma-chrome-launcher": "~3.2.0",

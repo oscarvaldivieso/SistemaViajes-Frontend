@@ -8,6 +8,11 @@ export const environment = {
   defaultauth: 'fakebackend',
   apiUrl: 'https://localhost:7228',
   apiKey: '4b567cb1c6b24b51ab55248f8e66e5cc',
+
+  // Cloudinary configuration for image uploads
+  cloudinaryCloudName: 'djqcus2kl', // Reemplazar con tu cloud name
+  cloudinaryUploadPreset: 'img123', // Reemplazar con tu upload preset
+
   firebaseConfig: {
     apiKey: "AIzaSyCqS9cSPrDCNSQ-Ku2kZf5DBWjPPv7hvcA",
     authDomain: "test-demo-774f8.firebaseapp.com",

@@ -1,1 +1,197 @@
-<p>create works!</p>
+<!-- Custom Breadcrumb Header -->
+<app-breadcrumbs [title]="'Nueva Sucursal'" [icon]="'ri-store-3-line'" [breadcrumbItems]="[
+    { label: 'General' },
+    { label: 'Sucursales', link: '/general/sucursales/list' },
+    { label: 'Nueva Sucursal', active: true }
+  ]">
+</app-breadcrumbs>
+
+<div class="row">
+    <div class="col-lg-12">
+        <form [formGroup]="sucursalForm" (ngSubmit)="onSubmit()">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary bg-gradient border-0">
+                    <h5 class="card-title text-white mb-0">
+                        <i class="ri-file-add-line me-2"></i>Información de la Sucursal
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Código de Sucursal -->
+                        <div class="col-md-6">
+                            <label for="sucu_Codigo" class="form-label fw-semibold">
+                                <i class="ri-barcode-line me-1 text-primary"></i>Código
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="sucu_Codigo" formControlName="sucu_Codigo"
+                                placeholder="Ej: SUC001" [class.is-invalid]="hasFieldError('sucu_Codigo')"
+                                maxlength="20">
+                            <div class="invalid-feedback" *ngIf="hasFieldError('sucu_Codigo')">
+                                {{ getFieldError('sucu_Codigo') }}
+                            </div>
+                        </div>
+
+                        <!-- Nombre de Sucursal -->
+                        <div class="col-md-6">
+                            <label for="sucu_Nombre" class="form-label fw-semibold">
+                                <i class="ri-store-3-line me-1 text-primary"></i>Nombre
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="sucu_Nombre" formControlName="sucu_Nombre"
+                                placeholder="Ej: Sucursal Centro" [class.is-invalid]="hasFieldError('sucu_Nombre')"
+                                maxlength="100">
+                            <div class="invalid-feedback" *ngIf="hasFieldError('sucu_Nombre')">
+                                {{ getFieldError('sucu_Nombre') }}
+                            </div>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="col-md-12">
+                            <label for="sucu_Direccion" class="form-label fw-semibold">
+                                <i class="ri-map-pin-line me-1 text-primary"></i>Dirección
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="sucu_Direccion" formControlName="sucu_Direccion"
+                                placeholder="Ej: Av. Principal #123, Col. Centro"
+                                [class.is-invalid]="hasFieldError('sucu_Direccion')" maxlength="250">
+                            <div class="invalid-feedback" *ngIf="hasFieldError('sucu_Direccion')">
+                                {{ getFieldError('sucu_Direccion') }}
+                            </div>
+                        </div>
+
+                        <!-- Departamento -->
+                        <div class="col-md-6">
+                            <label for="depa_Codigo" class="form-label fw-semibold">
+                                <i class="ri-map-2-line me-1 text-primary"></i>Departamento
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="depa_Codigo" formControlName="depa_Codigo"
+                                [class.is-invalid]="hasFieldError('depa_Codigo')" [disabled]="isLoadingDepartamentos">
+                                <option value="" selected>
+                                    {{ isLoadingDepartamentos ? 'Cargando departamentos...' : 'Seleccione un
+                                    departamento' }}
+                                </option>
+                                <option *ngFor="let depa of departamentos" [value]="depa.depa_Codigo">
+                                    {{ depa.depa_Nombre }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="hasFieldError('depa_Codigo')">
+                                {{ getFieldError('depa_Codigo') }}
+                            </div>
+                        </div>
+
+                        <!-- Municipio -->
+                        <div class="col-md-6">
+                            <label for="muni_Codigo" class="form-label fw-semibold">
+                                <i class="ri-building-2-line me-1 text-primary"></i>Municipio
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="muni_Codigo" formControlName="muni_Codigo"
+                                [class.is-invalid]="hasFieldError('muni_Codigo')"
+                                [disabled]="isLoadingMunicipios || !sucursalForm.get('depa_Codigo')?.value">
+                                <option value="" selected>
+                                    {{ !sucursalForm.get('depa_Codigo')?.value ? 'Primero seleccione un departamento' :
+                                    isLoadingMunicipios ? 'Cargando municipios...' :
+                                    'Seleccione un municipio' }}
+                                </option>
+                                <option *ngFor="let muni of municipios" [value]="muni.muni_Codigo">
+                                    {{ muni.muni_Nombre }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="hasFieldError('muni_Codigo')">
+                                {{ getFieldError('muni_Codigo') }}
+                            </div>
+                            <small class="text-muted" *ngIf="!sucursalForm.get('depa_Codigo')?.value">
+                                <i class="ri-information-line"></i>
+                                Seleccione primero un departamento
+                            </small>
+                        </div>
+
+                        <!-- Imagen de Sucursal -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                <i class="ri-image-line me-1 text-primary"></i>Imagen de la Sucursal
+                                <span class="text-muted">(Opcional)</span>
+                            </label>
+
+                            <!-- Preview de imagen -->
+                            <div *ngIf="imagePreview" class="mb-3">
+                                <div class="position-relative d-inline-block">
+                                    <img [src]="imagePreview" alt="Preview" class="img-thumbnail"
+                                        style="max-width: 300px; max-height: 200px; object-fit: cover;">
+                                    <button type="button"
+                                        class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+                                        (click)="removeImage()" title="Eliminar imagen">
+                                        <i class="ri-close-line"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Input de archivo -->
+                            <div class="input-group" *ngIf="!imagePreview">
+                                <input type="file" class="form-control" id="imageInput" accept="image/*"
+                                    (change)="onFileSelected($event)">
+                                <label class="input-group-text" for="imageInput">
+                                    <i class="ri-upload-2-line"></i>
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <i class="ri-information-line"></i>
+                                Formatos permitidos: JPG, PNG, WEBP. Tamaño máximo: 5MB
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer con botones -->
+                <div class="card-footer bg-light border-top">
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-light" (click)="onCancel()"
+                            [disabled]="isSubmitting || isUploadingImage">
+                            <i class="ri-close-line me-1"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || isUploadingImage">
+                            <span *ngIf="!isSubmitting && !isUploadingImage">
+                                <i class="ri-save-line me-1"></i>Guardar Sucursal
+                            </span>
+                            <span *ngIf="isUploadingImage">
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                Subiendo imagen...
+                            </span>
+                            <span *ngIf="isSubmitting && !isUploadingImage">
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                Guardando...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Información adicional -->
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-body">
+                <h6 class="card-title mb-3">
+                    <i class="ri-information-line text-info me-2"></i>Información Importante
+                </h6>
+                <ul class="mb-0">
+                    <li class="mb-2">
+                        <strong>Código:</strong> Identificador único de la sucursal (máx. 20 caracteres)
+                    </li>
+                    <li class="mb-2">
+                        <strong>Nombre:</strong> Nombre descriptivo de la sucursal (máx. 100 caracteres)
+                    </li>
+                    <li class="mb-2">
+                        <strong>Dirección:</strong> Ubicación completa de la sucursal (máx. 250 caracteres)
+                    </li>
+                    <li class="mb-2">
+                        <strong>Departamento y Municipio:</strong> Ubicación geográfica de la sucursal
+                    </li>
+                    <li>
+                        <strong>Imagen:</strong> Foto de la sucursal (opcional). Se subirá a Cloudinary automáticamente
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

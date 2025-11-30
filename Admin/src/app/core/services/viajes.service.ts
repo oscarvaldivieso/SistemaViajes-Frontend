@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Viaje } from 'src/app/models/viaje.model';
 import { ViajeListado } from 'src/app/models/viaje-list.model';
+import { ViajesReporteRequest, ViajesReporteResponse } from '../models/viajes-reporte.model';
 
 interface ApiResponse<T> {
     type: number;
@@ -94,6 +95,22 @@ export class ViajesService {
         });
 
         return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/Eliminar/${id}`, {
+            headers
+        });
+    }
+
+    /**
+     * Obtiene el reporte de viajes con detalle y resumen por transportista
+     * @param request Parámetros del reporte (fechas y transportista opcional)
+     */
+    obtenerReporte(request: ViajesReporteRequest): Observable<ApiResponse<ViajesReporteResponse>> {
+        const headers = new HttpHeaders({
+            'XApiKey': environment.apiKey,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        });
+
+        return this.http.post<ApiResponse<ViajesReporteResponse>>(`${this.apiUrl}/Reporte`, request, {
             headers
         });
     }
