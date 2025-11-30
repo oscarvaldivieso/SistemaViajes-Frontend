@@ -24,7 +24,8 @@
                             <label for="viaj_Fecha" class="form-label">
                                 Fecha del Viaje <span class="text-danger">*</span>
                             </label>
-                            <input type="date" class="form-control" id="viaj_Fecha" formControlName="viaj_Fecha"
+                            <input type="datetime-local" class="form-control" id="viaj_Fecha"
+                                formControlName="viaj_Fecha"
                                 [class.is-invalid]="viajeForm.get('viaj_Fecha')?.invalid && viajeForm.get('viaj_Fecha')?.touched">
                             <div class="invalid-feedback">
                                 La fecha es requerida

@@ -18,6 +18,7 @@ import { takeUntil } from 'rxjs/operators';
 // Services
 import { ViajesService } from 'src/app/core/services/viajes.service';
 import { ViajeListado } from 'src/app/models/viaje-list.model';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-list',
@@ -46,7 +47,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private viajesService: ViajesService
+    private viajesService: ViajesService,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit(): void {
@@ -106,6 +108,14 @@ export class ListComponent implements OnInit, OnDestroy {
       v.sucu_Nombre?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       v.transportista?.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  /**
+   * Verifica si el usuario puede crear viajes (solo Role_Id: 1 - Gerente de Tienda)
+   */
+  canCreateViaje(): boolean {
+    const user = this.authService.getAuthenticatedUser();
+    return user?.Role_Id === 1;
   }
 
   /**

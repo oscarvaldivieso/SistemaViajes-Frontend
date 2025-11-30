@@ -20,6 +20,7 @@ import { Viaje, ColaboradorViaje } from 'src/app/models/viaje.model';
 import { Sucursal } from 'src/app/models/sucursal.model';
 import { Transportista } from 'src/app/models/transportista.model';
 import { Colaborador } from 'src/app/models/colaborador.model';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 
 interface ColaboradorConDistancia extends Colaborador {
   selected?: boolean;
@@ -57,7 +58,8 @@ export class CreateComponent implements OnInit, OnDestroy {
     private sucursalesService: SucursalesService,
     private transportistasService: TransportistasService,
     private colaboradoresService: ColaboradoresService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthenticationService
   ) {
     this.initForm();
   }
@@ -73,12 +75,26 @@ export class CreateComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Obtiene el ID del usuario autenticado
+   */
+  private getAuthenticatedUserId(): number {
+    const user = this.authService.getAuthenticatedUser();
+    return user?.Usua_Id || 0;
+  }
+
   initForm(): void {
-    // Get today's date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0];
+    // Get current date and time in YYYY-MM-DDTHH:mm format for datetime-local input
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const datetimeLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
 
     this.viajeForm = this.fb.group({
-      viaj_Fecha: [today, Validators.required],
+      viaj_Fecha: [datetimeLocal, Validators.required],
       sucu_Id: ['', Validators.required],
       tran_Id: ['', Validators.required]
     });
@@ -204,7 +220,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       viaj_Fecha: this.viajeForm.value.viaj_Fecha,
       sucu_Id: parseInt(this.viajeForm.value.sucu_Id),
       tran_Id: parseInt(this.viajeForm.value.tran_Id),
-      usua_Creacion: 2, // TODO: Obtener del usuario autenticado
+      usua_Creacion: this.getAuthenticatedUserId(),
       colaboradores: selectedColaboradores.map(c => ({
         colb_Id: c.colb_Id!,
         clVj_DistanciaKm: c.cosu_DistanciaKm!

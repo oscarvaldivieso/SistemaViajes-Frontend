@@ -1,0 +1,118 @@
+<!-- Custom Breadcrumb Header -->
+<app-breadcrumbs [title]="'Nuevo Transportista'" [icon]="'ri-truck-line'" [breadcrumbItems]="[
+    { label: 'General' },
+    { label: 'Transportistas', link: '/general/transportistas/list' },
+    { label: 'Nuevo', active: true }
+  ]">
+</app-breadcrumbs>
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Form Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="ri-truck-line align-baseline me-1"></i>
+                    Información del Transportista
+                </h5>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="transportistaForm" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <!-- Número de Identidad -->
+                        <div class="col-md-6 mb-3">
+                            <label for="tran_Identidad" class="form-label">
+                                Número de Identidad <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="tran_Identidad" formControlName="tran_Identidad"
+                                placeholder="0801199012345" maxlength="13"
+                                [class.is-invalid]="isFieldInvalid('tran_Identidad')">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('tran_Identidad')">
+                                {{ getErrorMessage('tran_Identidad') }}
+                            </div>
+                            <small class="text-muted">Ingrese el número de identidad de 13 dígitos</small>
+                        </div>
+
+                        <!-- Nombre Completo / Razón Social -->
+                        <div class="col-md-6 mb-3">
+                            <label for="tran_NombreCompleto" class="form-label">
+                                Nombre Completo / Razón Social <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="tran_NombreCompleto"
+                                formControlName="tran_NombreCompleto" placeholder="Transportes Rápidos López S.A."
+                                [class.is-invalid]="isFieldInvalid('tran_NombreCompleto')">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('tran_NombreCompleto')">
+                                {{ getErrorMessage('tran_NombreCompleto') }}
+                            </div>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="col-md-6 mb-3">
+                            <label for="tran_Telefono" class="form-label">
+                                Teléfono <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-phone-line"></i>
+                                </span>
+                                <input type="text" class="form-control" id="tran_Telefono"
+                                    formControlName="tran_Telefono" placeholder="22334455" maxlength="8"
+                                    [class.is-invalid]="isFieldInvalid('tran_Telefono')">
+                                <div class="invalid-feedback" *ngIf="isFieldInvalid('tran_Telefono')">
+                                    {{ getErrorMessage('tran_Telefono') }}
+                                </div>
+                            </div>
+                            <small class="text-muted">8 dígitos sin guiones</small>
+                        </div>
+
+                        <!-- Tarifa por Kilómetro -->
+                        <div class="col-md-6 mb-3">
+                            <label for="tran_TarifaPorKm" class="form-label">
+                                Tarifa por Kilómetro (L) <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-money-dollar-circle-line"></i>
+                                </span>
+                                <input type="number" class="form-control" id="tran_TarifaPorKm"
+                                    formControlName="tran_TarifaPorKm" placeholder="12.50" step="0.01" min="0"
+                                    [class.is-invalid]="isFieldInvalid('tran_TarifaPorKm')">
+                                <div class="invalid-feedback" *ngIf="isFieldInvalid('tran_TarifaPorKm')">
+                                    {{ getErrorMessage('tran_TarifaPorKm') }}
+                                </div>
+                            </div>
+                            <small class="text-muted">Tarifa en Lempiras por kilómetro recorrido</small>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Form Actions -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" (click)="onCancel()"
+                                    [disabled]="isSubmitting">
+                                    <i class="ri-close-line align-baseline me-1"></i>
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary"
+                                    [disabled]="isSubmitting || transportistaForm.invalid">
+                                    <span *ngIf="!isSubmitting">
+                                        <i class="ri-save-line align-baseline me-1"></i>
+                                        Guardar Transportista
+                                    </span>
+                                    <span *ngIf="isSubmitting">
+                                        <span class="spinner-border spinner-border-sm me-1" role="status"
+                                            aria-hidden="true"></span>
+                                        Guardando...
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

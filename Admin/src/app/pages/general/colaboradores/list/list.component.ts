@@ -14,6 +14,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // Services & Models
 import { ColaboradoresService } from 'src/app/core/services/colaboradores.service';
 import { Colaborador } from 'src/app/models/colaborador.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list',
@@ -35,9 +36,16 @@ export class ListComponent implements OnInit, OnDestroy {
   errorMessage = '';
   searchTerm = '';
 
+  // Modal de confirmación
+  colaboradorToDelete: Colaborador | null = null;
+  isDeleting = false;
+
   private destroy$ = new Subject<void>();
 
-  constructor(private colaboradoresService: ColaboradoresService) { }
+  constructor(
+    private colaboradoresService: ColaboradoresService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.loadColaboradores();
@@ -102,24 +110,76 @@ export class ListComponent implements OnInit, OnDestroy {
     return sexo === 'F' ? 'bg-pink-subtle text-pink' : 'bg-info-subtle text-info';
   }
 
+  /**
+   * Abre el modal de confirmación para eliminar
+   */
   onDelete(id: number): void {
-    if (confirm('¿Está seguro de eliminar este colaborador?')) {
-      this.colaboradoresService.eliminarColaborador(id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response: any) => {
-            if (response.success) {
-              this.loadColaboradores();
-              alert('Colaborador eliminado exitosamente');
-            } else {
-              alert(response.message || 'Error al eliminar');
-            }
-          },
-          error: (error) => {
-            console.error('❌ Error eliminando colaborador:', error);
-            alert('Error al eliminar el colaborador');
-          }
-        });
+    const colaborador = this.colaboradores.find(c => c.colb_Id === id);
+    if (colaborador) {
+      this.colaboradorToDelete = colaborador;
     }
+  }
+
+  /**
+   * Cancela la eliminación y cierra el modal
+   */
+  cancelDelete(): void {
+    this.colaboradorToDelete = null;
+  }
+
+  /**
+   * Confirma y ejecuta la eliminación
+   */
+  confirmDelete(): void {
+    if (!this.colaboradorToDelete || !this.colaboradorToDelete.colb_Id) {
+      return;
+    }
+
+    this.isDeleting = true;
+    const colaboradorId = this.colaboradorToDelete.colb_Id;
+    const colaboradorNombre = this.colaboradorToDelete.colb_NombreCompleto;
+
+    this.colaboradoresService.eliminarColaborador(colaboradorId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.toastr.success(
+              `El colaborador "${colaboradorNombre}" ha sido eliminado exitosamente`,
+              'Eliminado',
+              { timeOut: 3000 }
+            );
+
+            // Recargar la lista
+            this.loadColaboradores();
+          } else {
+            this.toastr.error(
+              response.message || 'No se pudo eliminar el colaborador',
+              'Error',
+              { timeOut: 5000 }
+            );
+          }
+          this.isDeleting = false;
+          this.colaboradorToDelete = null;
+        },
+        error: (error) => {
+          console.error('❌ Error al eliminar colaborador:', error);
+
+          let errorMessage = 'Error al eliminar el colaborador';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          this.toastr.error(errorMessage, 'Error', {
+            timeOut: 5000,
+            progressBar: true
+          });
+
+          this.isDeleting = false;
+          this.colaboradorToDelete = null;
+        }
+      });
   }
 }

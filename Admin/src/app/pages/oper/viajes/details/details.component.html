@@ -23,20 +23,12 @@
 
 <!-- Viaje Details -->
 <div *ngIf="!isLoading && viaje" class="row">
-    <div class="col-12">
+    <div class="col-12 pb-5">
         <!-- Action Buttons -->
         <div class="d-flex gap-2 justify-content-between align-items-center mb-3">
-            <button class="btn btn-soft-secondary" (click)="onBack()">
+            <button class="btn btn-secondary" (click)="onBack()">
                 <i class="ri-arrow-left-line me-1"></i> Volver al Listado
             </button>
-            <div class="d-flex gap-2">
-                <button class="btn btn-soft-primary" (click)="onEdit()">
-                    <i class="ri-edit-line me-1"></i> Editar
-                </button>
-                <button class="btn btn-soft-danger">
-                    <i class="ri-delete-bin-line me-1"></i> Eliminar
-                </button>
-            </div>
         </div>
 
         <!-- Main Info Card -->
@@ -244,15 +236,6 @@
             </div>
         </div>
 
-        <!-- Action Buttons Bottom -->
-        <div class="d-flex gap-2 justify-content-between mt-3">
-            <button class="btn btn-secondary" (click)="onBack()">
-                <i class="ri-arrow-left-line me-1"></i> Volver
-            </button>
-            <button class="btn btn-primary" (click)="onEdit()">
-                <i class="ri-edit-line me-1"></i> Editar Viaje
-            </button>
-        </div>
     </div>
 </div>
 

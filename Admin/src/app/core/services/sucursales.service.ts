@@ -106,7 +106,7 @@ export class SucursalesService {
 
     console.log('📤 Actualizando sucursal:', sucursalConUsuario);
 
-    return this.http.put<ApiResponse<Sucursal>>(
+    return this.http.post<ApiResponse<Sucursal>>(
       `${this.apiUrl}/Actualizar`,
       sucursalConUsuario,
       { headers: this.getHeaders() }

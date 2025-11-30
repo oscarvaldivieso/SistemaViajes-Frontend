@@ -17,6 +17,12 @@ export class JwtInterceptor implements HttpInterceptor {
         request: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
+        // Skip adding Authorization header for Cloudinary requests
+        // Cloudinary uses unsigned uploads with upload_preset instead
+        if (request.url.includes('cloudinary.com')) {
+            return next.handle(request);
+        }
+
         if (environment.defaultauth === 'firebase') {
             // add authorization header with jwt token if available
             let currentUser = this.authenticationService.currentUser();

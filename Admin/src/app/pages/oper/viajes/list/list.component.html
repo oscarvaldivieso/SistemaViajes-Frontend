@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div class="row align-items-center justify-content-between gy-2">
                     <!-- Left: New Button -->
-                    <div class="col-md-auto">
+                    <div class="col-md-auto" *ngIf="canCreateViaje()">
                         <a routerLink="/oper/viajes/create" class="btn btn-primary btn-label">
                             <i class="ri-add-circle-line label-icon align-middle fs-lg me-2"></i>
                             Registrar Nuevo Viaje
@@ -84,20 +84,6 @@
                                     <li>
                                         <a class="dropdown-item" [routerLink]="['/oper/viajes/details', viaje.viaj_Id]">
                                             <i class="ri-eye-line me-2 text-primary"></i>Ver Detalles
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" [routerLink]="['/oper/viajes/edit', viaje.viaj_Id]">
-                                            <i class="ri-edit-line me-2 text-success"></i>Editar
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" href="javascript:void(0);"
-                                            (click)="onDelete(viaje.viaj_Id)">
-                                            <i class="ri-delete-bin-line me-2"></i>Eliminar
                                         </a>
                                     </li>
                                 </ul>

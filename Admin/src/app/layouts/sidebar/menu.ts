@@ -1,53 +1,7 @@
 import { MenuItem } from "./menu.model";
 
 export const MENU: MenuItem[] = [
-    {
-        id: 1,
-        label: 'MENUITEMS.MENU.TEXT',
-        isTitle: true
-    },
-    {
-        id: 2,
-        label: 'MENUITEMS.DASHBOARD.TEXT',
-        icon: 'ph-gauge',
-        subItems: [
-            {
-                id: 3,
-                label: 'MENUITEMS.DASHBOARD.LIST.ANALYTICS',
-                link: '/analytics',
-                parentId: 2
-            },
-            {
-                id: 4,
-                label: 'MENUITEMS.DASHBOARD.LIST.CRM',
-                link: '/crm',
-                parentId: 2
-            },
-            {
-                id: 5,
-                label: 'MENUITEMS.DASHBOARD.LIST.ECOMMERCE',
-                link: '/',
-                parentId: 2
-            },
-            {
-                id: 6,
-                label: 'MENUITEMS.DASHBOARD.LIST.LEARNING',
-                link: '/learning',
-                parentId: 2
-            },
-            {
-                id: 7,
-                label: 'MENUITEMS.DASHBOARD.LIST.REALESTATE',
-                link: '/real-estate',
-                parentId: 2
-            }
-        ]
-    },
-    {
-        id: 8,
-        label: 'MENUITEMS.APPS.TEXT',
-        isTitle: true
-    },
+
     {
         id: 24,
         label: 'MENUITEMS.APPS.LIST.VIAJES',
@@ -63,29 +17,24 @@ export const MENU: MenuItem[] = [
         parentId: 8
     },
     {
-        id: 39,
-        label: 'MENUITEMS.APPS.LIST.GENERAL',
-        icon: 'ph-file-text',
-        parentId: 8,
-        subItems: [
-            {
-                id: 80,
-                label: 'MENUITEMS.APPS.LIST.SUCURSALES',
-                link: '/general/sucursales/list',
-                parentId: 39
-            },
-            {
-                id: 81,
-                label: 'MENUITEMS.APPS.LIST.COLABORADORES',
-                link: '/general/colaboradores/list',
-                parentId: 39
-            }
-
-        ]
+        id: 26,
+        label: 'MENUITEMS.APPS.LIST.SUCURSALES',
+        icon: 'ri ri-store-fill ',
+        link: '/general/sucursales/list',
+        parentId: 8
     },
-
-
-
-
-
+    {
+        id: 27,
+        label: 'MENUITEMS.APPS.LIST.COLABORADORES',
+        icon: 'ri ri-user-fill ',
+        link: '/general/colaboradores/list',
+        parentId: 8
+    },
+    {
+        id: 28,
+        label: 'MENUITEMS.APPS.LIST.TRANSPORTISTAS',
+        icon: 'ph-truck',
+        link: '/general/transportistas/list',
+        parentId: 8
+    }
 ]

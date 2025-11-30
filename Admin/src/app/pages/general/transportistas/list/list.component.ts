@@ -12,10 +12,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 // Service
-import { SucursalesService } from 'src/app/core/services/sucursales.service';
+import { TransportistasService } from 'src/app/core/services/transportistas.service';
 
 // Models
-import { Sucursal } from 'src/app/models/sucursal.model';
+import { Transportista } from 'src/app/models/transportista.model';
 
 // RxJS
 import { Subject } from 'rxjs';
@@ -46,30 +46,28 @@ interface ApiResponse<T> {
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-
-
 export class ListComponent implements OnInit, OnDestroy {
 
-  sucursales: Sucursal[] = [];
+  transportistas: Transportista[] = [];
   isLoading = false;
   searchTerm = '';
   errorMessage = '';
 
   // Modal de confirmación
-  sucursalToDelete: Sucursal | null = null;
+  transportistaToDelete: Transportista | null = null;
   isDeleting = false;
 
   private destroy$ = new Subject<void>();
 
   constructor(
-    private sucursalesService: SucursalesService,
+    private transportistasService: TransportistasService,
     private router: Router,
     private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
-    console.log('✅ Componente de lista de sucursales cargado');
-    this.loadSucursales();
+    console.log('✅ Componente de lista de transportistas cargado');
+    this.loadTransportistas();
   }
 
   ngOnDestroy(): void {
@@ -77,19 +75,19 @@ export class ListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  loadSucursales(): void {
+  loadTransportistas(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.sucursalesService.listarSucursales()
+    this.transportistasService.listarTransportistas()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
           if (response.success) {
-            this.sucursales = response.data;
-            console.log('📦 Sucursales cargadas:', this.sucursales);
+            this.transportistas = response.data;
+            console.log('📦 Transportistas cargados:', this.transportistas);
           } else {
-            this.errorMessage = response.message || 'Error al cargar las sucursales';
+            this.errorMessage = response.message || 'Error al cargar los transportistas';
           }
           this.isLoading = false;
         },
@@ -102,21 +100,16 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   onEdit(id: number): void {
-    this.router.navigate(['/general/sucursales/edit', id]);
-  }
-
-  onView(id: number): void {
-    this.router.navigate(['/general/sucursales/details', id]);
+    this.router.navigate(['/general/transportistas/edit', id]);
   }
 
   /**
    * Abre el modal de confirmación para eliminar
    */
   onDelete(id: number): void {
-    const sucursal = this.sucursales.find(s => s.sucu_Id === id);
-    if (sucursal) {
-      this.sucursalToDelete = sucursal;
-      // El modal se abrirá automáticamente con el binding [ngClass]
+    const transportista = this.transportistas.find(t => t.tran_Id === id);
+    if (transportista) {
+      this.transportistaToDelete = transportista;
     }
   }
 
@@ -124,48 +117,48 @@ export class ListComponent implements OnInit, OnDestroy {
    * Cancela la eliminación y cierra el modal
    */
   cancelDelete(): void {
-    this.sucursalToDelete = null;
+    this.transportistaToDelete = null;
   }
 
   /**
    * Confirma y ejecuta la eliminación
    */
   confirmDelete(): void {
-    if (!this.sucursalToDelete || !this.sucursalToDelete.sucu_Id) {
+    if (!this.transportistaToDelete || !this.transportistaToDelete.tran_Id) {
       return;
     }
 
     this.isDeleting = true;
-    const sucursalId = this.sucursalToDelete.sucu_Id;
-    const sucursalNombre = this.sucursalToDelete.sucu_Nombre;
+    const transportistaId = this.transportistaToDelete.tran_Id;
+    const transportistaNombre = this.transportistaToDelete.tran_NombreCompleto;
 
-    this.sucursalesService.eliminarSucursal(sucursalId)
+    this.transportistasService.eliminarTransportista(transportistaId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.success) {
             this.toastr.success(
-              `La sucursal "${sucursalNombre}" ha sido eliminada exitosamente`,
+              `El transportista "${transportistaNombre}" ha sido eliminado exitosamente`,
               'Eliminado',
               { timeOut: 3000 }
             );
 
             // Recargar la lista
-            this.loadSucursales();
+            this.loadTransportistas();
           } else {
             this.toastr.error(
-              response.message || 'No se pudo eliminar la sucursal',
+              response.message || 'No se pudo eliminar el transportista',
               'Error',
               { timeOut: 5000 }
             );
           }
           this.isDeleting = false;
-          this.sucursalToDelete = null;
+          this.transportistaToDelete = null;
         },
         error: (error) => {
-          console.error('❌ Error al eliminar sucursal:', error);
+          console.error('❌ Error al eliminar transportista:', error);
 
-          let errorMessage = 'Error al eliminar la sucursal';
+          let errorMessage = 'Error al eliminar el transportista';
           if (error.error?.message) {
             errorMessage = error.error.message;
           } else if (error.message) {
@@ -178,18 +171,18 @@ export class ListComponent implements OnInit, OnDestroy {
           });
 
           this.isDeleting = false;
-          this.sucursalToDelete = null;
+          this.transportistaToDelete = null;
         }
       });
   }
 
-  filteredSucursales(): Sucursal[] {
+  filteredTransportistas(): Transportista[] {
     if (!this.searchTerm) {
-      return this.sucursales;
+      return this.transportistas;
     }
-    return this.sucursales.filter(s =>
-      s.sucu_Nombre?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      s.sucu_Codigo?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    return this.transportistas.filter(t =>
+      t.tran_NombreCompleto?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      t.tran_Identidad?.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 }
